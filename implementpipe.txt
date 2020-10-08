@@ -1,0 +1,32 @@
+#include &lt;errno.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+  
+int main()
+{
+    // array of 2 size a[0] is for reading 
+    // and a[1] is for writing over a pipe 
+   
+ int a[2]; 
+  
+    // opening of pipe using pipe(a)   
+    char buff[10];
+    if (pipe(a) == -1) 
+    {
+        perror(&quot;pipe&quot;); // error in pipe
+        exit(1); // exit from the program
+    }
+  
+    // writing a string &quot;code&quot; in pipe
+    write(a[1], &quot;code&quot;, 5); 
+    printf(&quot;\n&quot;);
+  
+    // reading pipe now buff is equal to &quot;code&quot;
+    read(a[0], buff, 5);
+  
+    // it will print &quot;code&quot;
+    printf(&quot;%s&quot;, buff); 
+}

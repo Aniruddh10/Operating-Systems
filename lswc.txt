@@ -1,0 +1,50 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;fcntl.h&gt;
+#include&lt;errno.h&gt;
+#include&lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+int main(){
+  
+    // array of 2 size a[0] is for
+    // reading and a[1] is for
+    // writing over a pipe    
+    int a[2];
+  
+    // using pipe for inter
+    // process communication
+    pipe(a);
+  
+    if(!fork())
+    {
+        // closing normal stdout
+        close(1);
+          
+        // making stdout same as a[1]
+         dup(a[1]);
+close (a[1])
+          
+        // closing reading part of pipe
+        // we don&#39;t need of it at this time
+        close(a[0]);
+          
+        // executing ls 
+        execlp(&quot;ls&quot;,&quot;ls&quot;,NULL);
+    }
+    else
+    {
+        // closing normal stdin
+        close(0);
+          
+        // making stdin same as a[0]
+        dup(a[0]);
+          
+        // closing writing part in parent,
+
+        // we don&#39;t need of it at this time
+        close(a[1]);
+          
+        // executing wc
+        execlp(&quot;wc&quot;,&quot;wc&quot;,NULL);
+    }
+}
